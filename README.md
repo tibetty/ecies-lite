@@ -16,21 +16,20 @@ First of all, `eccrypto` is a great tool that supports many EC crypto functions.
 const crypto = require('crypto'),
     ecies = require('ecies-lite');
 
-let encEcdh = crypto.createECDH('secp256k1');
-encEcdh.generateKeys();
-let publicKey = encEcdh.getPublicKey();
-let body = ecies.encrypt(publicKey, Buffer.from('This is a very simple test for ecies-lite'));
+let ecdh = crypto.createECDH('secp256k1');
+ecdh.generateKeys();
+let publicKey = ecdh.getPublicKey();
+let body = ecies.encrypt(publicKey, Buffer.from('This message is for demo purpose'));
 for (let k of Object.keys(body)) {
     console.log(`${k}(${body[k].length}B):`, body[k].toString('base64'));
 }
 
-let decEcdh = crypto.createECDH('secp256k1');
-
-let plain = ecies.decrypt(encEcdh.getPrivateKey(), body);
+let plain = ecies.decrypt(ecdh.getPrivateKey(), body);
 console.log('Decrypted plain text:', plain.toString('utf-8'));
 ```
 
 ## License
 
 ecies-lite - A lightweight ECIES tool implemented in pure Node.JS
+
 Written in 2018 by tibetty <xihua.duan@gmail.com>
