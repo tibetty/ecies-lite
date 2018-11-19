@@ -11,13 +11,15 @@
     "url": "git+https://github.com/tibetty/ecies-lite.git"
   },
   "keywords": [
-    "Elliptic",
-    "Curve",
-    "Integrated",
-    "Encryption",
-    "Scheme",
-    "EC",
-    "IES"
+    "elliptic",
+    "curve",
+    "encryption",
+    "decryption",
+    "Integrated Encryption Scheme",
+    "IES",
+    "ECIES",
+    "crytography",
+    "aes"
   ],
   "author": "tibetty",
   "license": "ISC",

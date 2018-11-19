@@ -4,7 +4,7 @@ A lightweight ECIES tool implemented in pure Node.JS
 
 ## Motivation
 
-First of all, `eccrypto` is a great tool that supports many EC crypto functions. However, it was developed years ago, and the crypto library has evolved a lot since then. It seems that ECIES (Elliptic Curve Integrated Encryption Scheme) can be implemented in pure Node.JS, so I re-implemented it with the help of the latest crypto module released with Node.JS 10.x.
+First of all, `eccrypto` is a great tool that supports many EC crypto functions. However, it was developed years ago, and the crypto library has evolved a lot since then. It seems that ECIES (Elliptic Curve Integrated Encryption Scheme) can be implemented in pure Node.JS, so I re-implemented it with the help of the latest crypto module released with Node.JS 10.x (according to my test, it runs pretty well with any node version after 6.x).
 
 * Multiple Curves, KDF: SHA-256, HMAC: MAC-WITH-SHA-256, Multiple Cipher Algorithms
 
