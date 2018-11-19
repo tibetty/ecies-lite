@@ -1,0 +1,28 @@
+{
+  "name": "ecies-lite",
+  "version": "1.0.0",
+  "description": "A lightweight ECIES tool implemented in pure Node.JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tibetty/ecies-lite.git"
+  },
+  "keywords": [
+    "Elliptic",
+    "Curve",
+    "Integrated",
+    "Encryption",
+    "Scheme",
+    "EC",
+    "IES"
+  ],
+  "author": "tibetty",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tibetty/ecies-lite/issues"
+  },
+  "homepage": "https://github.com/tibetty/ecies-lite#readme"
+}
