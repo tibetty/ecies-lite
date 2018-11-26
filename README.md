@@ -10,8 +10,6 @@ First of all, `eccrypto` is a great tool that supports many EC crypto functions.
 
 ## Usage
 
-### ECIES
-
 ```js
 const crypto = require('crypto'),
     ecies = require('ecies-lite');
@@ -20,13 +18,22 @@ let ecdh = crypto.createECDH('secp256k1');
 ecdh.generateKeys();
 let publicKey = ecdh.getPublicKey();
 let body = ecies.encrypt(publicKey, Buffer.from('This message is for demo purpose'));
-for (let k of Object.keys(body)) {
-    console.log(`${k}(${body[k].length}B):`, body[k].toString('base64'));
+/** structure of ECIES body 
+	epk: ephemeral public key;
+	iv: initialization vector for the cipher algorithm;
+	ct: cipher text;
+	mac: MAC value of the above fields along with the derived mac key;
+**/ 
+for (let [k, v] of Object.entries(body)) {
+    console.log(`${k}(${v.length}B):`, v.toString('base64'));
 }
 
 let plain = ecies.decrypt(ecdh.getPrivateKey(), body);
 console.log('Decrypted plain text:', plain.toString('utf-8'));
 ```
+
+## Dependencies
+`crypto` module shipped with Node later than 6.x
 
 ## License
 
