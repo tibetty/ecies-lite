@@ -21,8 +21,8 @@ let body = ecies.encrypt(publicKey, Buffer.from('This message is for demo purpos
 /** structure of ECIES body 
 	epk: ephemeral public key;
 	iv: initialization vector for the cipher algorithm;
-	ct: cipher text;
-	mac: MAC value of the above fields along with the derived mac key;
+	ct: cipher text with the derived encrypt key;
+	mac: MAC value of the above fields using the derived MAC key;
 **/ 
 for (let [k, v] of Object.entries(body)) {
     console.log(`${k}(${v.length}B):`, v.toString('base64'));
