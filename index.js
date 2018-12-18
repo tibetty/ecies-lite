@@ -14,9 +14,9 @@ const config = {
  * @return none
  */
 exports.config = (curveName, cipherAlgorithm, ivSize) => {
-    config.curveName = curveName;
-    config.cipherAlgorithm = cipherAlgorithm;
-    config.ivSize = ivSize;
+    config.curveName = curveName || config.curveName;
+    config.cipherAlgorithm = cipherAlgorithm || config.cipherAlgorithm;
+    config.ivSize = ivSize || config.ivSize;
 };
 
 /**
@@ -71,7 +71,7 @@ exports.decrypt = (sk, body, opts) => {
         let hash = crypto.createHash('sha256').update(ecdh.computeSecret(epk)).digest();
         let encKey = hash.slice(0, 32), macKey = hash.slice(16);
         let mac = crypto.createHmac('sha256', macKey).update(Buffer.concat([epk, iv, ct])).digest();
-        if (mac.compare(body.mac) !== 0)
+        if (mac.compare(body.mac) !== 0 || body.mac.compare(mac) !== 0)
             throw new Error('Corrupted Ecies-lite body: unmatched authentication code');
         let decipher = crypto.createDecipheriv(opts.cipherAlgorithm || config.cipherAlgorithm, encKey, iv);
         let pt = decipher.update(ct);
