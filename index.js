@@ -30,24 +30,27 @@ exports.config = (curveName, cipherAlgorithm, ivSize) => {
  * ephemeral public key, initialization vector, cipher text, mac code for above data, etc.
  */
 exports.encrypt = (pk, msg, opts) => {
-    if (!opts)
-        opts = {
-            curveName: config.curveName,
-            compressEpk: true,
-            cipherAlgorithm: config.cipherAlgorithm
-        };
+    const t = Object.assign({}, config);
+    if (!opts) {
+        opts = {};
+    }
+    opts = Object.assign(t, opts);
 
-    const ecdh = crypto.createECDH(opts.curveName || config.curveName);
-    if (opts.esk) ecdh.setPrivateKey(opts.esk);
-    else ecdh.generateKeys();
-    let epk = ecdh.getPublicKey(null, opts.compressEpk ? 'compressed' : 'uncompressed');
-    let hash = crypto.createHash('sha256').update(ecdh.computeSecret(pk)).digest();
-    let encKey = hash.slice(0, 32), macKey = hash.slice(16);
-    let iv = opts.iv || crypto.randomBytes(config.ivSize);
-    let cipher = crypto.createCipheriv(opts.cipherAlgorithm || config.cipherAlgorithm, encKey, iv);
+    const ecdh = crypto.createECDH(opts.curveName);
+    if (opts.esk) {
+        ecdh.setPrivateKey(opts.esk);
+    } else {
+        ecdh.generateKeys();
+    }
+
+    const epk = ecdh.getPublicKey(null, opts.compressEpk ? 'compressed' : 'uncompressed');
+    const hash = crypto.createHash('sha256').update(ecdh.computeSecret(pk)).digest();
+    const encKey = hash.slice(0, 32), macKey = hash.slice(16);
+    const iv = opts.iv || crypto.randomBytes(config.ivSize);
+    const cipher = crypto.createCipheriv(opts.cipherAlgorithm, encKey, iv);
     let ct = cipher.update(msg);
     ct = Buffer.concat([ct, cipher.final()]);
-    let mac = crypto.createHmac('sha256', macKey).update(Buffer.concat([epk, iv, ct])).digest();
+    const mac = crypto.createHmac('sha256', macKey).update(Buffer.concat([epk, iv, ct])).digest();
     return {epk, iv, ct, mac};
 };
 
@@ -59,21 +62,21 @@ exports.encrypt = (pk, msg, opts) => {
  * @return Buffer - the plain text decrypted from the Ecies-lite body
  */
 exports.decrypt = (sk, body, opts) => {
-    if (!opts)
-        opts = {
-            curveName: config.curveName,
-            cipherAlgorithm: config.cipherAlgorithm
-        };
+    const t = Object.assign({}, config);
+    if (!opts) {
+        opts = {};
+    }
+    opts = Object.assign(t, opts);
 
-    const ecdh = crypto.createECDH(opts.curveName || config.curveName);
+    const ecdh = crypto.createECDH(opts.curveName);
     ecdh.setPrivateKey(sk);
     with (body) {
-        let hash = crypto.createHash('sha256').update(ecdh.computeSecret(epk)).digest();
-        let encKey = hash.slice(0, 32), macKey = hash.slice(16);
-        let mac = crypto.createHmac('sha256', macKey).update(Buffer.concat([epk, iv, ct])).digest();
+        const hash = crypto.createHash('sha256').update(ecdh.computeSecret(epk)).digest();
+        const encKey = hash.slice(0, 32), macKey = hash.slice(16);
+        const mac = crypto.createHmac('sha256', macKey).update(Buffer.concat([epk, iv, ct])).digest();
         if (mac.compare(body.mac) !== 0 || body.mac.compare(mac) !== 0)
             throw new Error('Corrupted Ecies-lite body: unmatched authentication code');
-        let decipher = crypto.createDecipheriv(opts.cipherAlgorithm || config.cipherAlgorithm, encKey, iv);
+        const decipher = crypto.createDecipheriv(opts.cipherAlgorithm, encKey, iv);
         let pt = decipher.update(ct);
         return Buffer.concat([pt, decipher.final()]);
     }
